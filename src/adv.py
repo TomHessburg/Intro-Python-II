@@ -97,14 +97,10 @@ while True:
     else:
         print(f"There are no items to be seen in this room")
 
-    
-    
     #check for win state
     if new_player.current_room.name == "Treasure Chamber" and items["shiny-pendant"] in new_player.current_room.items:
         print("\n\n\nThe gods are pleased that you have returned the treasre.. Thank you for restoring the peace.")
         break
-
-
 
     #action input handlers
     action = input("\n\n\n\n\nWhat would you wish to do?:")
