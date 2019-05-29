@@ -3,9 +3,10 @@ from room import Room
 from item import Item
 
 items = {
-    "sword": Item("guilded sword... ", "A perfect item for slaying your enimies."),
-    "shield": Item("diamond shield... ", " Wonder why some one is leaving such expensive equipment behind... kind of strange..."),
-    "pendant": Item("a shiny pendant... ", "the pendant contains a strange message in a language that you cant comprehend."),
+    "map": Item("map... ", "this should help me in my journy."),
+    "sword": Item("sword... ", "A perfect item for slaying your enimies."),
+    "shield": Item("shield... ", " Defend from your foes..."),
+    "shiny-pendant": Item("shiny-pendant... ", "the pendant contains a strange message in a language that you cant comprehend."),
 }
 
 # Declare all the rooms
@@ -15,7 +16,7 @@ room = {
                      "North of you, the cave mount beckons", [items["sword"], items["shield"]]),
 
     'foyer':    Room("Foyer", """Dim light filters in from the south. Dusty
-passages run north and east.""", [items["pendant"],]),
+passages run north and east.""", [items["shiny-pendant"],]),
 
     'overlook': Room("Grand Overlook", """A steep cliff appears before you, falling
 into the darkness. Ahead to the north, a light flickers in
@@ -41,12 +42,14 @@ room['narrow'].w_to = room['foyer']
 room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 
+
+#make player
 from player import Player
 
 player_name = input("Please enter your name, adventurer!: ")
 
-new_player = Player(player_name, room["outside"])
-
+new_player = Player(player_name, room["outside"], [items["map"]])
+print("(n, s, e, w) to move, 'take' or 'drop' to interact with items...")
 
 
 
@@ -72,34 +75,59 @@ def move_player(curRoom, direction):
         else:
             print("\nYou can not go that way, adventuruer!")
 
-    elif direction == "w":
+    else:
         if curRoom.w_to != None:
             new_player.current_room = curRoom.w_to
             
         else:
             print("\nYou can not go that way, adventuruer!")
-    else:
-        print("\nSorry, that is not a direction.... what are they teaching these kids nowasays...")
     
 
 
 
 while True:
     
-    print(f"\n{new_player.name} finds him/herself {new_player.current_room.name}... \n")
+    print(f"\n{new_player.current_room.name}... ")
     print(f"{new_player.current_room.description}... \n")
     
+    ##print items in room
     if len(new_player.current_room.items) > 0:
-        print("    you see some items in this room\n")
+        print("you see some items in this room\n")
         for i in new_player.current_room.items:
-            print(f"        {i.name} {i.description}")
+            print(f"    {i.name} {i.description}")
     else:
-        print(f"    There are no items to be seen in this room")
+        print(f"There are no items to be seen in this room")
 
-    direction = input("\nwhich direction do you wish to travel from here? (n, s, e, w):")
-    if direction == "q":
+    
+    #print items in inventory
+    if len(new_player.items) > 0:
+        print("\nyoure currently carrying:\n")
+        for i in new_player.items:
+            print(f"    {i.name} {i.description}")
+    else:
+        print("\nyou arent currently carrying any items")
+
+
+
+    #action input handlers
+    action = input("\nWhat would you wish to do?:")
+    #quit
+    if action == "q":
         break
-    move_player(new_player.current_room, direction)
+    #move
+    elif action == "n" or action == "s" or action == "e" or action == "w":
+        move_player(new_player.current_room, action)
+    #take an item
+    elif "take" in action:
+        item = action[5:]
+        new_player.items.append(items[item])
+    #drop an item
+    elif "drop" in action:
+        item = action[5:]
+        new_player.items.remove(items[item])
+    #dont allow other input
+    else:
+        print("\nSorry, but i cant read that input!")
 
 
 print("See you soon, adventurer!")
