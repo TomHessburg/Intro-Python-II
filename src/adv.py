@@ -49,7 +49,7 @@ from player import Player
 player_name = input("Please enter your name, adventurer!: ")
 
 new_player = Player(player_name, room["outside"], [items["map"]])
-print("(n, s, e, w) to move, 'take' or 'drop' to interact with items...")
+print("(n, s, e, w) to move, 'take' or 'drop' to interact with items, 'i' or 'inventory' to see what youre holding...")
 
 
 
@@ -84,7 +84,6 @@ def move_player(curRoom, direction):
     
 
 
-
 while True:
     
     print(f"\n{new_player.current_room.name}... ")
@@ -99,18 +98,16 @@ while True:
         print(f"There are no items to be seen in this room")
 
     
-    #print items in inventory
-    if len(new_player.items) > 0:
-        print("\nyoure currently carrying:\n")
-        for i in new_player.items:
-            print(f"    {i.name} {i.description}")
-    else:
-        print("\nyou arent currently carrying any items")
+    
+    #check for win state
+    if new_player.current_room.name == "Treasure Chamber" and items["shiny-pendant"] in new_player.current_room.items:
+        print("\n\n\nThe gods are pleased that you have returned the treasre.. Thank you for restoring the peace.")
+        break
 
 
 
     #action input handlers
-    action = input("\nWhat would you wish to do?:")
+    action = input("\n\n\n\n\nWhat would you wish to do?:")
     #quit
     if action == "q":
         break
@@ -120,11 +117,25 @@ while True:
     #take an item
     elif "take" in action:
         item = action[5:]
-        new_player.items.append(items[item])
+        if items[item] in new_player.current_room.items:
+            new_player.on_take(item)
+            new_player.items.append(items[item])
+            new_player.current_room.items.remove(items[item])
+        else:
+            print("that items dosnt exist here..")
     #drop an item
     elif "drop" in action:
         item = action[5:]
-        new_player.items.remove(items[item])
+        if items[item] in new_player.items:  
+            new_player.items.remove(items[item])
+            new_player.current_room.items.append(items[item])
+        else:
+            print("You dont have that item to drop!")
+    #show inventory
+    elif action == "i":
+        new_player.tell_items()
+    elif action == "inventory":
+        new_player.tell_items()
     #dont allow other input
     else:
         print("\nSorry, but i cant read that input!")
