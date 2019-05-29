@@ -33,23 +33,57 @@ room['narrow'].w_to = room['foyer']
 room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 
+from player import Player
+
+player_name = input("Please enter your name, adventurer!: ")
+
+new_player = Player(player_name, room["outside"])
 
 
-print(room['narrow'])
 
-#
-# Main
-#
 
-# Make a new player object that is currently in the 'outside' room.
 
-# Write a loop that:
-#
-# * Prints the current room name
-# * Prints the current description (the textwrap module might be useful here).
-# * Waits for user input and decides what to do.
-#
-# If the user enters a cardinal direction, attempt to move to the room there.
-# Print an error message if the movement isn't allowed.
-#
-# If the user enters "q", quit the game.
+def move_player(curRoom, direction):
+    if direction == "n":
+        if curRoom.n_to != None:
+            new_player.current_room = curRoom.n_to
+            
+        else:
+            print("\nYou can not go that way, adventuruer!")
+    elif direction == "s":
+        if curRoom.s_to != None:
+            new_player.current_room = curRoom.s_to
+            
+        else:
+            print("\nYou can not go that way, adventuruer!")
+
+    elif direction == "e":
+        if curRoom.e_to != None:
+            new_player.current_room = curRoom.e_to
+            
+        else:
+            print("\nYou can not go that way, adventuruer!")
+
+    elif direction == "w":
+        if curRoom.w_to != None:
+            new_player.current_room = curRoom.w_to
+            
+        else:
+            print("\nYou can not go that way, adventuruer!")
+    else:
+        print("\nSorry, that is not a direction.... what are they teaching these kids nowasays...")
+    
+
+
+
+while True:
+    print(f"\n{new_player.name} finds him/herself {new_player.current_room.name}")
+    print(f"{new_player.current_room.description}")
+
+    direction = input("\nwhich direction do you wish to travel from here? (n, s, e, w):")
+    if direction == "q":
+        break
+    move_player(new_player.current_room, direction)
+
+
+print("See you soon, adventurer!")
