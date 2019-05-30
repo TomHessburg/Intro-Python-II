@@ -8,7 +8,7 @@ items = {
     "map": Item("map", "...this should help me in my journy."),
     "sword": Item("sword", "...a perfect item for slaying your enimies."),
     "shield": Item("shield", "...defend from your foes..."),
-    "shiny-pendant": Item("shiny-pendant", "...the pendant contains a strange message in a language that you cant comprehend."),
+    "shiny pendant": Item("shiny pendant", "...the pendant contains a strange message in a language that you cant comprehend."),
     "lamp": LightSource("lamp", "...You better take this so that you can see in the caves!", True),
 }
 
@@ -19,7 +19,7 @@ room = {
                      "North of you, the cave mount beckons", [items["sword"], items["shield"]], True),
 
     'foyer':    Room("Foyer", """Dim light filters in from the south. Dusty
-passages run north and east.""", [items["shiny-pendant"], ], True),
+passages run north and east.""", [items["shiny pendant"], ], True),
 
     'overlook': Room("Grand Overlook", """A steep cliff appears before you, falling
 into the darkness. Ahead to the north, a light flickers in
@@ -53,19 +53,19 @@ room['outside'].s_to = room['graveyard']
 room['graveyard'].n_to = room['outside']
 
 
-# make player
-
+# create a new player
 player_name = input("Please enter your name, adventurer!: ")
 
 new_player = Player(player_name, room["outside"], [items["map"]])
 print("(n, s, e, w) to move, 'take' or 'drop' to interact with items, 'i' or 'inventory' to see what youre holding...\n\n\n")
 
 
+# handel player movement
 def move_player(curRoom, direction):
     if direction == "n":
         if curRoom.n_to != None:
             new_player.current_room = curRoom.n_to
-            if new_player.current_room.is_light == True:
+            if new_player.current_room.is_light == True:  # aware that this isnt the intended way of doing this... shoud use isinstance, but was having some issues getting that to do what i wanted, so keeping this for now
                 print(f"{new_player.current_room.name}... ")
                 print(f"{new_player.current_room.description}... ")
             else:
@@ -122,6 +122,7 @@ def move_player(curRoom, direction):
             print("You can not go that way, adventuruer!")
 
 
+# initial print of starting room
 print(f"{new_player.current_room.name}... ")
 print(f"{new_player.current_room.description}... ")
 
@@ -138,7 +139,7 @@ while True:
             print(f"There are no items to be seen in this room")
 
     # check for win state
-    if new_player.current_room.name == "Treasure Chamber" and items["shiny-pendant"] in new_player.current_room.items:
+    if new_player.current_room.name == "Treasure Chamber" and items["shiny pendant"] in new_player.current_room.items:
         print("The gods are pleased that you have returned the treasre.. Thank you for restoring the peace.")
         break
 
